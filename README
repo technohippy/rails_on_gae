@@ -1,13 +1,26 @@
 RailsOnGae
 ==========
 
-Introduction goes here.
+Rake task
+---------
+- gae:init
+
+Generator
+---------
+- bumble_model
 
 
 Example
 =======
 
-Example goes here.
+1. develop your own rails app
+2. rake gae:init
+3. warble war
+4. unset GEM_HOME
+5. dev_appserver.sh tmp/war
+6. access http://localhost:8080
+
+1. script/generate bumble_model User name age sex
 
 
-Copyright (c) 2009 [name of plugin creator], released under the MIT license
+Copyright (c) 2009 rails_on_gae, released under the MIT license
