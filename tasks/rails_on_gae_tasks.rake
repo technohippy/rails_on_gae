@@ -29,8 +29,11 @@ namespace :gae do
     end
 
     # rewrite shebang from ruby to jruby
-    gsub_file("script/generate", %r{^(#!(.*)[\s/])ruby}, '\1jruby')
-    gsub_file("script/plugin", %r{^(#!(.*)[\s/])ruby}, '\1jruby')
+    gsub_file('script/generate', %r{^(#!(.*)[\s/])ruby}, '\1jruby')
+    gsub_file('script/plugin', %r{^(#!(.*)[\s/])ruby}, '\1jruby')
+
+    # comment out protect_from_forgery
+    gsub_file('/app/controllers/application_controller.rb', /^(\s*)(protect_from_forgery)/, '\1# \2'
 
     # create appengine-web.xml
     filename = 'appengine-web.xml'
@@ -73,6 +76,7 @@ RAILS_GEM_VERSION = '2.3.2'
     warble = File.read(filename)
     warble.sub! /^end$/, <<-EOS
   config.gems -= ["rails"]
+  config.gem_dependencies = false
   config.includes = FileList['appengine-web.xml', 'datastore-indexes.xml']
   config.java_libs = []
   config.webxml.jruby.min.runtimes = 1
