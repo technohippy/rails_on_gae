@@ -33,7 +33,7 @@ namespace :gae do
     gsub_file('script/plugin', %r{^(#!(.*)[\s/])ruby}, '\1jruby')
 
     # comment out protect_from_forgery
-    gsub_file('/app/controllers/application_controller.rb', /^(\s*)(protect_from_forgery)/, '\1# \2'
+    gsub_file('app/controllers/application_controller.rb', /^(\s*)(protect_from_forgery)/, '\1# \2'
 
     # create appengine-web.xml
     filename = 'appengine-web.xml'
