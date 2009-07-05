@@ -78,6 +78,7 @@ RAILS_GEM_VERSION = '2.3.2'
   config.gems -= ["rails"]
   config.gem_dependencies = false
   config.includes = FileList['appengine-web.xml', 'datastore-indexes.xml']
+  config.excludes = FileList["vendor/plugins/**/jruby*.jar"]
   config.java_libs = []
   config.webxml.jruby.min.runtimes = 1
   config.webxml.jruby.max.runtimes = 1
