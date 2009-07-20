@@ -44,30 +44,10 @@ namespace :gae do
     cp_template('datastore-indexes.xml', '/')
     cp_template('production.rb', '/config/environments/')
     cp_template('bumble.rb', '/lib/')
+    cp_template('bumble_appengine_jruby.rb', '/lib/')
     cp_template('beeu.rb', '/lib/')
     cp_template('rake_fix.rb', '/lib/')
     cp_template('require_fix.rb', '/lib/')
-
-    # setup config/environment.rb
-    filename = "#{RAILS_ROOT}/config/environment.rb"
-    env = File.read(filename)
-    env = <<-EOS + env
-require 'lib/require_fix'
-require 'lib/rake_fix'
-#require 'lib/actionmailer-2.3.2.jar'
-require 'lib/actionpack-2.3.2.jar'
-#require 'lib/activerecord-2.3.2.jar'
-#require 'lib/activeresource-2.3.2.jar'
-require 'lib/activesupport-2.3.2.jar'
-require 'lib/rails-2.3.2.jar'
-require 'lib/jruby-openssl-0.4.jar'
-require 'lib/bumble'
-require 'lib/beeu'
-RAILS_GEM_VERSION = '2.3.2'
-    EOS
-    env.sub! /^Rails::Initializer\.run.*$/, 
-      "\\0\n  config.frameworks -= [ :active_record, :active_resource, :action_mailer ]"
-    File.open(filename, 'w') {|file| file.print env}
 
     # warble
     sh 'warble pluginize'
@@ -86,6 +66,37 @@ RAILS_GEM_VERSION = '2.3.2'
 end
     EOS
     File.open(filename, 'w') {|file| file.print warble}
+
+    # setup config/environment.rb
+    filename = "#{RAILS_ROOT}/config/environment.rb"
+    env = File.read(filename)
+    env = <<-EOS + env
+require 'rubygems'
+require 'lib/require_fix'
+require 'lib/rake_fix'
+#require 'lib/actionmailer-2.3.2.jar'
+require 'lib/actionpack-2.3.2.jar'
+#require 'lib/activerecord-2.3.2.jar'
+#require 'lib/activeresource-2.3.2.jar'
+require 'lib/activesupport-2.3.2.jar'
+require 'lib/rails-2.3.2.jar'
+require 'lib/jruby-openssl-0.5.1.jar'
+require 'lib/bumble_appengine_jruby'
+require 'lib/beeu'
+
+require 'lib/appengine-apis-gems.jar'
+begin
+  require 'appengine-apis/local_boot'
+  require 'appengine-apis/datastore'
+rescue LoadError
+  # ignore
+end
+
+RAILS_GEM_VERSION = '2.3.2'
+    EOS
+    env.sub! /^Rails::Initializer\.run.*$/, 
+      "\\0\n  config.frameworks -= [ :active_record, :active_resource, :action_mailer ]"
+    File.open(filename, 'w') {|file| file.print env}
   end
 
 =begin
